@@ -30,6 +30,6 @@
 * Prepare input data and use the model to make predictions.
 ## Roles
 * Database Design and SQL implementation - Dimitri
-* Mongodb implementation - Daniel
+* Mongodb implementation - Raisa
 * APIs - Cynthia
-* Fetch and Prediction - Raisa
+* Fetch and Prediction - Daniel
