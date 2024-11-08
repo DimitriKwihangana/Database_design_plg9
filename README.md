@@ -11,17 +11,17 @@
 * Choose a relational database management system (RDBMS) such as MySQL, PostgreSQL, or SQLite.
 * Create a schema with not less than two tables based on any Kaggle dataset for your use case. That is, find a dataset on Kaggle agreed upon as a group, design a database, and submit the relational database schema together with relevant code
 * Structure:
-Design the schema - Must have no less than 3 tables
-Define primary and foreign keys.
+- Design the schema - Must have no less than 3 tables
+- Define primary and foreign keys.
 * MongoDB
-Implement the same using Mongodb collections
+- Implement the same using Mongodb collections
 ## Task 3 - Create API Endpoints for CRUD Operations
 * Choose a framework Preferable fastapi
 * Endpoints
-Create (POST)
-Read (GET)
-Update (PUT)
-Delete(DELETE)
+- Create (POST)
+- Read (GET)
+- Update (PUT)
+- Delete(DELETE)
 ## Task 4 -  Create a Script to Fetch Data for Prediction
 * Fetch Data of the latest Entry:
 * Write a script to fetch data using the API.
