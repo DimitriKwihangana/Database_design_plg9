@@ -52,8 +52,8 @@ async def make_prediction(waterp_request: WaterPRequest):
     try:
         single_row = [[waterp_request.ph, waterp_request.Hardness, waterp_request.Solids, waterp_request.Chloramines, waterp_request.Sulfate , waterp_request.Conductivity , waterp_request.Organic_carbon, waterp_request.Trihalomethanes, waterp_request.Turbidity]]
         new_value = model.predict(single_row)
-        integer_quality = int(new_value[0])  # Convert the predicted value to an integer
-        return {"predicted Quality": integer_quality}
+        integer_value = int(new_value[0])  # Convert the predicted value to an integer
+        return {"predicted Value": integer_value}
         
     #except:
     #    raise HTTPException(status_code=500, detail="Something went wrong.")
