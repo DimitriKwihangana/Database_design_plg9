@@ -5,11 +5,16 @@ from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from databases import Database
 from pydantic import BaseModel
+from pymongo.mongo_client import MongoClient
+from routes.route import router
 
 app = FastAPI()
 
 # Database URL with async support for SQLAlchemy
 DATABASE_URL = "postgresql+asyncpg://root:vs1kol6cpH9KmVe0U8hVuO52sdwv2MeF@dpg-csl7uqe8ii6s73c181ag-a.oregon-postgres.render.com/customer_database_5rln"
+
+app.include_router(router)
+
 
 # Setup async SQLAlchemy engine and session
 async_engine = create_async_engine(DATABASE_URL, echo=True)
