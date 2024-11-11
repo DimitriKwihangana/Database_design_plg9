@@ -35,10 +35,10 @@ class Customer(Base):
     customer_id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(255))
 
-class WaterQuality(Base):
-    __tablename__ = 'water_quality'
-    sample_id = Column(Integer, primary_key=True, autoincrement=True)
-    potability = Column(Boolean)
+# class WaterQuality(Base):
+#     __tablename__ = 'water_quality'
+#     sample_id = Column(Integer, primary_key=True, autoincrement=True)
+#     potability = Column(Boolean)
 
 ####### Other table ORM models
 # Create all tables in the database (this is needed to create 'customers' table)
