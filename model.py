@@ -1,3 +1,7 @@
+"""
+SQL Database Schema
+"""
+
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base

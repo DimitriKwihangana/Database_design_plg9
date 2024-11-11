@@ -42,3 +42,30 @@ async def delete_water(id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Water quality record not found")
     return {"msg": "Water quality record deleted successfully"}
+
+@router.get("/mongo/get_latest")
+async def get_latest_water_record():
+    """
+    Sorts by ID and get the latest record
+    """
+    latest_water = collection_name.find().sort("_id", -1).limit(1)
+    latest_water = list_serial(latest_water)
+    
+    if not latest_water:
+        raise HTTPException(status_code=404, detail="No water quality records found")
+    
+    # Extract only the fields required by the model
+    filtered_data = {
+        "ph": latest_water[0]["ph"],
+        "chloramines": latest_water[0]["chloramines"],
+        "sulfate": latest_water[0]["sulfate"],
+        "conductivity": latest_water[0]["conductivity"],
+        "organic_carbon": latest_water[0]["organic_carbon"],
+        "trihalomethanes": latest_water[0]["trihalomethanes"],
+        "hardness": latest_water[0]["hardness"],
+        "solids": latest_water[0]["solids"],
+        "turbidity": latest_water[0]["turbidity"],
+    }
+
+    return filtered_data
+
