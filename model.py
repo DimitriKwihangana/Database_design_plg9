@@ -10,7 +10,6 @@ Base = declarative_base()
 
 class WaterQuality(Base):
     __tablename__ = 'water_quality'
-
     sample_id = Column(Integer, primary_key=True, autoincrement=True)
     potability = Column(Boolean)
     chemical_properties = relationship("ChemicalProperties", back_populates="water_quality")
@@ -28,7 +27,6 @@ class ChemicalProperties(Base):
     conductivity = Column(Float)
     organic_carbon = Column(Float)
     trihalomethanes = Column(Float)
-
     water_quality = relationship("WaterQuality", back_populates="chemical_properties")
 
 
