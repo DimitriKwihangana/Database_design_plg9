@@ -7,6 +7,8 @@
 ## TASK 1
 * Create a normalized Database Schema for the following Dataset for [Software Companies](https://www.google.com/url?q=https://docs.google.com/spreadsheets/d/16uXnRa3jRmT5KK4tQCkCabE9j3nKsLKX/edit?usp%3Dsharing%26ouid%3D116630687391172440524%26rtpof%3Dtrue%26sd%3Dtrue&sa=D&source=editors&ust=1731105129609306&usg=AOvVaw2-sVHhDwuflGtqFMaBmUQ0)
 * Use Proper Tools to draw the database Schema (Lucid Chat, Draw.io, etc)
+![alt text](<task1 copy.png>)
+
 ## Task 2
 * Choose a relational database management system (RDBMS) such as MySQL, PostgreSQL, or SQLite.
 * Create a schema with not less than two tables based on any Kaggle dataset for your use case. That is, find a dataset on Kaggle agreed upon as a group, design a database, and submit the relational database schema together with relevant code
