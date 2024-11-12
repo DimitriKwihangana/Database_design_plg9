@@ -1,6 +1,6 @@
 from mongoengine import Document, FloatField, IntField, ReferenceField, connect
 
-# Connect to MongoDB (replace with your database URI and name)
+
 connect('plg_9', host='mongodb://localhost:27017/your_database_name')
 
 
@@ -15,7 +15,7 @@ class ChemicalProperties(Document):
     Trihalomethanes = FloatField()
 
     meta = {
-        'collection': 'chemical_properties',  # Collection name
+        'collection': 'chemical_properties',  
     }
 
 
@@ -25,23 +25,23 @@ class PhysicalProperties(Document):
     Turbidity = FloatField()
 
     meta = {
-        'collection': 'physical_properties',  # Collection name
+        'collection': 'physical_properties',  
     }
 
 
-# Define the Samples collection, referencing the chemical and physical properties
+
 class Samples(Document):
-    potability = IntField(required=True)  # 1 for potable, 0 for not potable
-    chemical_properties = ReferenceField(ChemicalProperties)  # Reference to ChemicalProperties document
-    physical_properties = ReferenceField(PhysicalProperties)  # Reference to PhysicalProperties document
+    potability = IntField(required=True)  
+    chemical_properties = ReferenceField(ChemicalProperties)  
+    physical_properties = ReferenceField(PhysicalProperties)  
 
     meta = {
-        'collection': 'samples',  # Specifies the collection name
-        'ordering': ['-id']       # Orders by `_id` in descending order by default
+        'collection': 'samples',  
+        'ordering': ['-id']     
     }
 
 
-# Example function to add a sample to the database
+
 def add_sample(potability, pH, Hardness, Solids, Chloramines, Sulfate,
                Organic_carbon, Trihalomethanes, Conductivity, Turbidity):
     
@@ -62,21 +62,20 @@ def add_sample(potability, pH, Hardness, Solids, Chloramines, Sulfate,
         Conductivity=Conductivity,
         Turbidity=Turbidity
     )
-    phys_props.save()  # Save to MongoDB
+    phys_props.save()  
 
-    # Create a sample and reference the chemical and physical properties
+    
     sample = Samples(
         potability=potability,
         chemical_properties=chem_props,
         physical_properties=phys_props
     )
-    sample.save()  # Save to MongoDB
+    sample.save()  
     print("Sample added with ID:", sample.id)
 
 
-# Function to fetch and display the latest sample
 def fetch_latest_sample():
-    latest_sample = Samples.objects.first()  # Fetches the latest due to ordering
+    latest_sample = Samples.objects.first()  
 
     if latest_sample:
         print("Latest Sample ID:", latest_sample.id)
@@ -104,9 +103,9 @@ def fetch_latest_sample():
         print("No samples found in the database.")
 
 
-# Example usage
+
 if __name__ == "__main__":
-    # Add a new sample
+    
     add_sample(
         potability=1,  # 1 for potable, 0 for not potable
         pH=7.1,
