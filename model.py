@@ -1,5 +1,5 @@
 """
-SQL Database Schema
+SQL database schema
 """
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Boolean
