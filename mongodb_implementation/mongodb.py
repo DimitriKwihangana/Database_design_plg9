@@ -1,81 +1,56 @@
+import asyncio
 import pandas as pd
-from pymongo import MongoClient
-
-# Connecting to MongoDB
-client = MongoClient("mongodb://localhost:27017/")
-db = client["water_potability_db"]
-
+import motor.motor_asyncio
 import os
-print(os.getcwd()) 
+import sys
 
+# MongoDB connection
+MONGODB_URL = "mongodb+srv://dimitrikwihangana:admin1234@waterpotability.lb4ag.mongodb.net/?retryWrites=true&w=majority&appName=waterpotability"
+client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
+db = client['waterpotability']  # Replace with your database name
 
-# Load the dataset
-file_path = 'water_potability.csv'
-dataset = pd.read_csv(file_path)
-dataset['SampleID'] = range(1, len(dataset) + 1)
-print(dataset)
+async def populate_mongodb(file_path):
+    try:
+        # Read the Excel file
+        df = pd.read_excel(file_path, engine='openpyxl')
 
+        for _, row in df.iterrows():
+            # Insert into ChemicalProperties collection
+            chemical_props = {
+                "ph": row['ph'],
+                "chloramines": row['Chloramines'],
+                "sulfate": row['Sulfate'],
+                "conductivity": row['Conductivity'],
+                "organic_carbon": row['Organic_carbon'],
+                "trihalomethanes": row['Trihalomethanes']
+            }
+            chem_result = await db.ChemicalProperties.insert_one(chemical_props)
+            
+            # Insert into PhysicalProperties collection
+            physical_props = {
+                "hardness": row['Hardness'],
+                "solids": row['Solids'],
+                "turbidity": row['Turbidity']
+            }
+            phys_result = await db.PhysicalProperties.insert_one(physical_props)
 
+            # Insert into WaterQuality collection, referencing the inserted documents
+            water_quality = {
+                "potability": row['Potability'],
+                "chemical_properties_id": chem_result.inserted_id,
+                "physical_properties_id": phys_result.inserted_id
+            }
+            await db.WaterQuality.insert_one(water_quality)
 
-# Collections and Data insertetion
-Samples_Collection = {
-  "$jsonSchema": {
-    "bsonType": "object",
-    "required": ["locationId", "sampleDate", "potability"],
-    "properties": {
-       "locationId": {"bsonType": "objectId", "description": "Reference to the location of the water sample."},
-       "sampleDate": {"bsonType": "date", "description": "Date when the sample was collected."},
-       "potability": {"bsonType": "int", "enum": [0, 1], "description": "Indicates if the water is potable (1) or not potable (0)."}
-    }
-  }
-}
+        print("Data inserted successfully")
 
-ChemicalProperties_Collection = {
-  "$jsonSchema": {
-     "bsonType": "object",
-     "required": ["sampleId", "ph", "hardness", "solids", "chloramines", "sulfate"],
-     "properties": {
-       "sampleId": {"bsonType": "objectId",  "description": "Reference to the sample in the Samples collection."},
+    except Exception as e:
+        print(f"Error occurred: {e}", file=sys.stderr)
 
-       "ph": {"bsonType": "double", "description": "pH level of the water sample."},
+if __name__ == "__main__":
+    file_path = "new_one.xlsx"
+    if not os.path.exists(file_path):
+        print(f"File {file_path} does not exist")
+        sys.exit(1)
 
-       "hardness": {"bsonType": "double", "description": "Hardness level of the water sample."},
-
-       "solids": {"bsonType": "double", "description": "Solids concentration in the water sample."},
-
-       "chloramines": {"bsonType": "double", "description": "Chloramines concentration in the water sample."},
-
-       "sulfate": {"bsonType": "double", "description": "Sulfate concentration in the water sample."}
-     }
-  }
-}
-
-PhysicalProperties_Collection = {
-   "$jsonSchema": {
-     "bsonType": "object",
-     "required": ["sampleId", "conductivity", "organicCarbon", "trihalomethanes", "turbidity"],
-     "properties": {
-       "sampleId":{"bsonType": "objectId", "description": "Reference to the sample in the Samples collection."},
-
-        "conductivity": {"bsonType": "double", "description": "Conductivity of the water sample."},
-
-        "organicCarbon": {"bsonType": "double", "description": "Organic carbon concentration in the water sample."},
-
-        "trihalomethanes": {"bsonType": "double", "description": "Trihalomethanes concentration in the water sample."},
-
-        "turbidity": {"bsonType": "double", "description": "Turbidity level of the water sample."}
-     }
-   }
-}
-
-def create_or_update_collection(collection_name, schema):
-    if collection_name in db.list_collection_names():
-        db.command({"collMod": collection_name, "validator": schema})
-    else:
-        db.create_collection(collection_name, validator=schema)
-
-create_or_update_collection("Samples", Samples_Collection)
-create_or_update_collection("ChemicalProperties", ChemicalProperties_Collection)
-create_or_update_collection("PhysicalProperties", PhysicalProperties_Collection)
-
-print("Collections updated with schema validation successfully!")
+    asyncio.run(populate_mongodb(file_path))
