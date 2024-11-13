@@ -47,3 +47,10 @@ async def populate_mongodb(file_path):
     except Exception as e:
         print(f"Error occurred: {e}", file=sys.stderr)
 
+if __name__ == "__main__":
+    file_path = "new_one.xlsx"
+    if not os.path.exists(file_path):
+        print(f"File {file_path} does not exist")
+        sys.exit(1)
+
+    asyncio.run(populate_mongodb(file_path))
